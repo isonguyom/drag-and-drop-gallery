@@ -1,3 +1,7 @@
+# hngx-stage-three-task
+This is a graded task for promotion into HNGX Internship stage four
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
