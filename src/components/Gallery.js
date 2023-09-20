@@ -13,7 +13,7 @@ function GalleryItem(props) {
 }
 
 function Gallery() {
-    // const { user, isAuthenticated, isLoading } = useAuth0();
+  // const { user, isAuthenticated, isLoading } = useAuth0();
   const [galleryImages, setGalleryImages] = useState([]);
 
   useEffect(() => {
@@ -38,9 +38,9 @@ function Gallery() {
   if (galleryImages.length === 0) {
     return <div>Loading top movies...</div>;
   }
-//   if (!isAuthenticated) {
-//     e.preventDefault(); // Prevent dragging if the user is not logged in
-//   }
+  //   if (!isAuthenticated) {
+  //     e.preventDefault(); // Prevent dragging if the user is not logged in
+  //   }
 
   return (
     <section className="Gallery">

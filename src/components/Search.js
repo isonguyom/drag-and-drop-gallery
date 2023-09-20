@@ -1,9 +1,9 @@
 function Search() {
-    return (
-        <div>
-        <input type='text' placeholder='Search...' />
-        </div>
-    )
+  return (
+    <div>
+      <input type="text" placeholder="Search..." />
+    </div>
+  );
 }
 
-export default Search
+export default Search;
