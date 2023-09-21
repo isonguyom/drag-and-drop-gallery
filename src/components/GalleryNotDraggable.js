@@ -36,8 +36,8 @@ function GalleryItem(props) {
   );
 }
 
-function Gallery() {
-  const [images, setImages] = useState(importedImages);
+function GalleryNotDraggable() {
+  const [images] = useState(importedImages);
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearchChange = (e) => {
@@ -51,25 +51,6 @@ function Gallery() {
     );
   };
 
-  const onDragStart = (e, index) => {
-    if (e.draggable === "true") {
-      e.dataTransfer.setData("text/plain", index.toString());
-    }
-  };
-
-  const onDragOver = (e) => {
-    e.preventDefault();
-  };
-
-  const onDrop = (e, targetIndex) => {
-    e.preventDefault();
-    const sourceIndex = parseInt(e.dataTransfer.getData("text/plain"));
-    const updatedImages = [...images];
-    const [draggedImage] = updatedImages.splice(sourceIndex, 1);
-    updatedImages.splice(targetIndex, 0, draggedImage);
-    setImages(updatedImages);
-  };
-
   return (
     <section className="Gallery">
       <input
@@ -80,22 +61,13 @@ function Gallery() {
         onChange={handleSearchChange}
       />
       <h2 className="heading">Gallery</h2>
-      <div
-        className="Gallery-inner"
-        onDragOver={onDragOver}
-        onDrop={(e) => onDrop(e, images.length)}
-      >
+      <div className="Gallery-inner">
         {filterImagesByTag().map((image) => (
-          <GalleryItem
-            key={image.id}
-            image={image}
-            draggable="true"
-            onDragStart={(e) => onDragStart(e, image.id)}
-          />
+          <GalleryItem key={image.id} image={image} />
         ))}
       </div>
     </section>
   );
 }
 
-export default Gallery;
+export default GalleryNotDraggable;
