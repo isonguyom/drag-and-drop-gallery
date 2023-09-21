@@ -29,7 +29,7 @@ const importedImages = [
 
 function GalleryItem(props) {
   return (
-    <div className="Gallery-item">
+    <div className="Gallery-item not-draggable">
       <img src={`${props.image.src}`} alt={props.image.title} />
       <p>{props.image.tag}</p>
     </div>

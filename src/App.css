@@ -36,13 +36,21 @@
 .Gallery-inner {
   display: grid;
   grid-template-columns: auto;
-  gap: 1em;
+  gap: 1.1em;
+}
+
+.Gallery-item {
+  cursor: grab;
 }
 
 .Gallery-item img {
   max-height: 300px;
-  cursor: grab;
 }
+
+.Gallery-item.not-draggable {
+  cursor: default;
+}
+
 
 @media screen and (min-width: 480px) {
   .profile-bar {

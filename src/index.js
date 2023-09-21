@@ -11,7 +11,7 @@ root.render(
     domain="dev-6oftyyavsickanej.us.auth0.com"
     clientId="Wmw566tLoAYY6354bv6zU652ugaZHFoS"
     authorizationParams={{
-      redirect_uri: window.location.origin,
+      redirect_uri: "https://isonguyom.github.io/hngx-stage-three-task/",
     }}
   >
     <App />
