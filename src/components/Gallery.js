@@ -34,32 +34,29 @@ function Gallery() {
   const [filteredImages, setFilteredImages] = useState([]);
   const [draggedImage, setDraggedImage] = useState(null);
 
+  // Simulate loading images
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+      setImages(importedImages);
+    }, 2000);
+  }, []);
 
-    // Simulate loading images
-    useEffect(() => {
-      setTimeout(() => {
-        setLoading(false)
-       setImages(importedImages)
-      }, 2000); 
-      }, []);
-      
-
-      useEffect(() => {
-        const filtered = images.filter((item) =>
-          item.tag.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        setFilteredImages(filtered);
-      }, [images, searchTerm]);
+  useEffect(() => {
+    const filtered = images.filter((item) =>
+      item.tag.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredImages(filtered);
+  }, [images, searchTerm]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
-
   const onDragStart = (e, image) => {
-    e.dataTransfer.setData('text/plain', image.id.toString());
+    e.dataTransfer.setData("text/plain", image.id.toString());
     setDraggedImage(image);
-    console.log(`Start dragging poster${image.id}`)
+    console.log(`Start dragging poster${image.id}`);
   };
 
   const onDragOver = (e) => {
@@ -83,17 +80,23 @@ function Gallery() {
 
     setFilteredImages(updatedImages);
     setDraggedImage(null);
-    console.log(`Dropped poster ${draggedImage.id} onto poster ${targetImage.id}`);
-
+    console.log(
+      `Dropped poster ${draggedImage.id} onto poster ${targetImage.id}`
+    );
   };
 
   const onTouchStart = (e, image) => {
     e.preventDefault();
+    // e.dataTransfer.setData("text/plain", image.toString());
     setDraggedImage(image);
+    console.log(
+      `Touch started for poster ${image.id}`
+    );
   };
 
   const onTouchMove = (e) => {
     e.preventDefault();
+    console.log('touch move')
   };
 
   const onTouchEnd = (e, targetImage) => {
@@ -114,7 +117,9 @@ function Gallery() {
 
     setFilteredImages(updatedImages);
     setDraggedImage(null);
+    console.log(`Dropped image with ID ${draggedImage.id} onto image with ID ${targetImage.id}`);
   };
+
 
   return (
     <section className="Gallery">
@@ -129,25 +134,24 @@ function Gallery() {
       {loading ? (
         <div className="loader"></div>
       ) : (
-      <div
-        className="Gallery-inner"
-      >
-        {filteredImages.map((image) => (
-                <div className="Gallery-item"
-          key={image.id}
-          draggable="true"
-          onDragStart={(e) => onDragStart(e, image)}
-          onDragOver={onDragOver}
-          onDrop={(e) => onDrop(e, image)}
-          onTouchStart={(e) => onTouchStart(e, image)}
+        <div className="Gallery-inner">
+          {filteredImages.map((image) => (
+            <div
+              className="Gallery-item"
+              key={image.id}
+              draggable="true"
+              onDragStart={(e) => onDragStart(e, image)}
+              onDragOver={onDragOver}
+              onDrop={(e) => onDrop(e, image)}
+              onTouchStart={(e) => onTouchStart(e, image)}
               onTouchMove={onTouchMove}
               onTouchEnd={(e) => onTouchEnd(e, image)}
-          >
-          <img src={`${image.src}`} alt={image.title} />
-          <p>{image.tag}</p>
+            >
+              <img src={`${image.src}`} alt={`Poster ${image.id}`} />
+              <p>{image.tag}</p>
+            </div>
+          ))}
         </div>
-        ))}
-      </div>
       )}
     </section>
   );
