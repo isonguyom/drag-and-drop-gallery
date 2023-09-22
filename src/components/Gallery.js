@@ -87,8 +87,8 @@ function Gallery() {
 
   const onTouchStart = (e, image) => {
     e.preventDefault();
-    // e.dataTransfer.setData("text/plain", image.toString());
-    setDraggedImage(image);
+    // e.dataTransfer.setData("text/plain", image.id.toString());
+    setDraggedImage(image.id);
     console.log(
       `Touch started for poster ${image.id}`
     );
@@ -98,26 +98,23 @@ function Gallery() {
     e.preventDefault();
     console.log('touch move')
   };
-
   const onTouchEnd = (e, targetImage) => {
     e.preventDefault();
 
-    if (!draggedImage || draggedImage.id === targetImage.id) {
-      return;
-    }
+   const newImages = [...filteredImages];
+  
+   if (draggedImage !== null) {
 
-    const updatedImages = filteredImages.map((img) => {
-      if (img.id === draggedImage.id) {
-        return targetImage;
-      } else if (img.id === targetImage.id) {
-        return draggedImage;
-      }
-      return img;
-    });
-
-    setFilteredImages(updatedImages);
-    setDraggedImage(null);
-    console.log(`Dropped image with ID ${draggedImage.id} onto image with ID ${targetImage.id}`);
+     const temp = newImages[targetImage];
+     newImages[targetImage] = newImages[draggedImage];
+     newImages[draggedImage] = temp;
+     
+     // Update the 'images' state with the new order.
+     setFilteredImages(newImages);
+   }
+   
+   // Reset the draggedIndex state.
+   setDraggedImage(null);
   };
 
 
@@ -135,7 +132,7 @@ function Gallery() {
         <div className="loader"></div>
       ) : (
         <div className="Gallery-inner">
-          {filteredImages.map((image) => (
+          {filteredImages.map((image, index) => (
             <div
               className="Gallery-item"
               key={image.id}
@@ -145,7 +142,7 @@ function Gallery() {
               onDrop={(e) => onDrop(e, image)}
               onTouchStart={(e) => onTouchStart(e, image)}
               onTouchMove={onTouchMove}
-              onTouchEnd={(e) => onTouchEnd(e, image)}
+              onTouchEnd={(e) => onTouchEnd(e, index)}
             >
               <img src={`${image.src}`} alt={`Poster ${image.id}`} />
               <p>{image.tag}</p>
