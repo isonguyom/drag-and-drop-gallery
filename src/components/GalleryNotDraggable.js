@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import image1 from "../images/image1.jpg";
 import image2 from "../images/image2.jpg";
 import image3 from "../images/image3.jpg";
@@ -37,18 +37,30 @@ function GalleryItem(props) {
 }
 
 function GalleryNotDraggable() {
-  const [images] = useState(importedImages);
+    const [loading, setLoading] = useState(true);
+  const [images, setImages] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filteredImages, setFilteredImages] = useState([]);
+
+
+    // Simulate loading images
+    useEffect(() => {
+      setTimeout(() => {
+        setLoading(false)
+       setImages(importedImages)
+      }, 2000); 
+      }, []);
+      
+
+      useEffect(() => {
+        const filtered = images.filter((item) =>
+          item.tag.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredImages(filtered);
+      }, [images, searchTerm]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
-  };
-
-  // Filter images based on the search tag
-  const filterImagesByTag = () => {
-    return images.filter((image) =>
-      image.tag.toLowerCase().includes(searchTerm.toLowerCase())
-    );
   };
 
   return (
@@ -61,11 +73,15 @@ function GalleryNotDraggable() {
         onChange={handleSearchChange}
       />
       <h2 className="heading">Gallery</h2>
+      {loading ? (
+        <div className="loader"></div>
+      ) : (
       <div className="Gallery-inner">
-        {filterImagesByTag().map((image) => (
+        {filteredImages.map((image) => (
           <GalleryItem key={image.id} image={image} />
         ))}
       </div>
+      )}
     </section>
   );
 }
