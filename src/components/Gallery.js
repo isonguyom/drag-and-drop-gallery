@@ -90,7 +90,30 @@ function Gallery() {
   const onTouchStart = (e, image) => {
     e.preventDefault();
     setDraggedImage(image);
-    console.log(`Touch started for poster ${image.id}`);
+  };
+
+  const onTouchMove = (e) => {
+    e.preventDefault();
+  };
+
+  const onTouchEnd = (e, targetImage) => {
+    e.preventDefault();
+
+    if (!draggedImage || draggedImage.id === targetImage.id) {
+      return;
+    }
+
+    const updatedImages = filteredImages.map((img) => {
+      if (img.id === draggedImage.id) {
+        return targetImage;
+      } else if (img.id === targetImage.id) {
+        return draggedImage;
+      }
+      return img;
+    });
+
+    setFilteredImages(updatedImages);
+    setDraggedImage(null);
   };
 
   return (
@@ -109,7 +132,7 @@ function Gallery() {
       <div
         className="Gallery-inner"
       >
-        {filteredImages.map((image, index) => (
+        {filteredImages.map((image) => (
                 <div className="Gallery-item"
           key={image.id}
           draggable="true"
@@ -117,8 +140,8 @@ function Gallery() {
           onDragOver={onDragOver}
           onDrop={(e) => onDrop(e, image)}
           onTouchStart={(e) => onTouchStart(e, image)}
-              onTouchMove={onDragOver}
-              onTouchEnd={(e) => onDrop(e, image)}
+              onTouchMove={onTouchMove}
+              onTouchEnd={(e) => onTouchEnd(e, image)}
           >
           <img src={`${image.src}`} alt={image.title} />
           <p>{image.tag}</p>
