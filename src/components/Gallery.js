@@ -27,20 +27,21 @@ const importedImages = [
   { id: "12", src: image12, tag: "Drama" },
 ];
 
-function GalleryItem(props) {
-  return (
-    <div className="Gallery-item">
-      <img src={`${props.image.src}`} alt={props.image.title} />
-      <p>{props.image.tag}</p>
-    </div>
-  );
-}
+// function GalleryItem(props) {
+//   return (
+//     <div className="Gallery-item">
+//       <img src={`${props.image.src}`} alt={props.image.title} />
+//       <p>{props.image.tag}</p>
+//     </div>
+//   );
+// }
 
 function Gallery() {
   const [loading, setLoading] = useState(true);
   const [images, setImages] = useState(importedImages);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredImages, setFilteredImages] = useState([]);
+  // const [filteredImages, setFilteredImages] = useState([]);
+  const [draggedImage, setDraggedImage] = useState(null);
 
 
     // Simulate loading images
@@ -56,30 +57,90 @@ function Gallery() {
         const filtered = images.filter((item) =>
           item.tag.toLowerCase().includes(searchTerm.toLowerCase())
         );
-        setFilteredImages(filtered);
+        setImages(filtered);
       }, [images, searchTerm]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value)
 
-  const onDragStart = (e, index) => {
-      e.dataTransfer.setData("text/plain", index.toString());
+  
+  
+    // Filter the images based on the tag
+    const filteredImages = images.filter((image) =>
+      image.tag.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  
+    // Update the displayed images with the filtered results
+    setImages(filteredImages);
   };
+  
 
-  const onDragOver = (e) => {
-    e.preventDefault();
-  };
+const handleDragStart = (e, image) => {
+  setDraggedImage(image.id);
+};
 
-  const onDrop = (e, targetIndex) => {
-    e.preventDefault();
-    const sourceIndex = parseInt(e.dataTransfer.getData("text/plain"));
-    const updatedImages = [...images];
-    const [draggedImage] = updatedImages.splice(sourceIndex, 1);
-    updatedImages.splice(targetIndex, 0, draggedImage);
-    setImages(updatedImages);
-  };
+const handleDragOver = (e) => {
+  e.preventDefault();
+};
+
+const handleDragEnter = (e, image) => {
+  e.preventDefault();
+  // You can add visual feedback here, e.g., changing the style of the element being dragged over.
+};
+
+const handleDragLeave = (e) => {
+  // Reset any visual feedback.
+};
+
+const handleDropImage = (e, index) => {
+  e.preventDefault();
+
+  if (draggedImage !== null) {
+    const newImages = [...images];
+    const [draggedImg] = newImages.splice(draggedImage, 1);
+    newImages.splice(index, 0, draggedImg);
+
+    setImages(newImages);
+  }
+
+  // Reset the draggedIndex state.
+  setDraggedImage(null);
+};
+
+
+
+  // const onDragStart = (e, image) => {
+  //   e.dataTransfer.setData('text/plain', image.id.toString());
+  //   setDraggedImage(image);
+  // };
+
+  // const onDragOver = (e) => {
+  //   e.preventDefault();
+  // };
+
+  // const onDrop = (e) => {
+  //   e.preventDefault();
+  //   const droppedImageId = e.dataTransfer.getData('text/plain');
+  //   const updatedImages = [...filteredImages];
+  //   const droppedImageIndex = updatedImages.findIndex(
+  //     (image) => image.id === parseInt(droppedImageId, 10)
+  //   );
+  //   const draggedImageIndex = updatedImages.findIndex(
+  //     (image) => image.id === draggedImage.id
+  //   );
+
+  //    // Swap the positions of the dropped image and the dragged image
+  //   const temp = updatedImages[droppedImageIndex];
+  //   updatedImages[droppedImageIndex] = updatedImages[draggedImageIndex];
+  //   updatedImages[draggedImageIndex] = temp;
+
+  //   setFilteredImages(updatedImages);
+  //   setDraggedImage(null);
+  // };
 
   return (
     <section className="Gallery">
@@ -88,7 +149,7 @@ function Gallery() {
         type="text"
         placeholder="Search by image tag"
         value={searchTerm}
-        onChange={handleSearchChange}
+        onChange={(e)=> handleSearch}
       />
       <h2 className="heading">Gallery</h2>
       {loading ? (
@@ -96,16 +157,28 @@ function Gallery() {
       ) : (
       <div
         className="Gallery-inner"
-        onDragOver={onDragOver}
-        onDrop={(e) => onDrop(e, images.length)}
       >
-        {filteredImages.map((image) => (
-          <GalleryItem
-            key={image.id}
-            image={image}
-            draggable="true"
-            onDragStart={(e) => onDragStart(e, image.id)}
-          />
+        {images.map((image) => (
+          // <GalleryItem
+          //   key={image.id}
+          //   image={image}
+          //   draggable="true"
+          //   onDragStart={(e) => onDragStart(e, image)}
+          // />
+           
+          <div
+          key={image.id}
+          className="Gallery-item"
+          draggable="true"
+          onDragStart={(e) => handleDragStart(e, image)}
+          onDragOver={(e) => handleDragOver(e)}
+          onDragEnter={(e) => handleDragEnter(e, image)}
+          onDragLeave={(e) => handleDragLeave(e)}
+          onDrop={(e) => handleDropImage(e, image)}
+        >
+        <img src={`${image.src}`} alt={image.title} />
+              <p>{image.tag}</p>
+        </div>
         ))}
       </div>
       )}
