@@ -6,13 +6,29 @@ This is a graded task for promotion into HNGX Internship stage four
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Setup
 
-In the project directory, you can run:
+Clone Repo:
+```
+git clone https://github.com/isonguyom/hngx-stage-three-task.git
+```
 
-### `npm start`
+Enter the root directory:
+```
+cd hngx-stage-three-task
+```
+
+
+### Install dependencies
+Install client dependencies:
+```
+npm install
+
 
 Runs the app in the development mode.\
+```
+npm start
+```
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
