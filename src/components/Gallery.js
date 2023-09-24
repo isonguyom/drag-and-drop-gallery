@@ -33,6 +33,7 @@ function Gallery() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredImages, setFilteredImages] = useState([]);
   const [draggedImage, setDraggedImage] = useState(null);
+  const [touchStartPosition, setTouchStartPosition] = useState(null);
 
   // Simulate loading images
   useEffect(() => {
@@ -59,8 +60,9 @@ function Gallery() {
     console.log(`Start dragging poster${image.id}`);
   };
 
-  const onDragOver = (e) => {
+  const onDragOver = (e, image) => {
     e.preventDefault();
+    console.log(`draggedImage move over poster${image.id}`);
   };
 
   const onDrop = (e, targetImage) => {
@@ -86,37 +88,65 @@ function Gallery() {
   };
 
   const onTouchStart = (e, image) => {
-    e.preventDefault();
-    // e.dataTransfer.setData("text/plain", image.id.toString());
-    setDraggedImage(image.id);
-    console.log(
-      `Touch started for poster ${image.id}`
-    );
+    // const imageId = e.currentTarget.getAttribute('data-image-id');
+    // e.currentTarget.style.zIndex = '10';
+    setTouchStartPosition({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+    setDraggedImage(image);
+    console.log(`Touch started for poster ${image.id}`);
   };
 
-  const onTouchMove = (e) => {
+  const onTouchMove = (e, image) => {
+    if (!draggedImage) return;
+
+    // Calculate the horizontal and vertical distance moved.
+    const deltaX = e.touches[0].clientX - touchStartPosition.x;
+    const deltaY = e.touches[0].clientY - touchStartPosition.y;
+
+    // You can apply your own logic to update the element's position based on deltaX and deltaY.
+    // For example, translate the element using CSS transform property.
+    e.currentTarget.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+
     e.preventDefault();
-    console.log('touch move')
+    console.log(`Touch moved over poster ${image.id}`);
   };
   const onTouchEnd = (e, targetImage) => {
-    e.preventDefault();
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
 
-   const newImages = [...filteredImages];
-  
-   if (draggedImage !== null) {
+    // Set touchStartPosition to the end position to allow further interaction from that point.
+    setTouchStartPosition({ x: touchEndX, y: touchEndY });
 
-     const temp = newImages[targetImage];
-     newImages[targetImage] = newImages[draggedImage];
-     newImages[draggedImage] = temp;
-     
-     // Update the 'images' state with the new order.
-     setFilteredImages(newImages);
-   }
-   
-   // Reset the draggedIndex state.
-   setDraggedImage(null);
+    // Reset any temporary styles applied during the touch drag (e.g., transform).
+    e.currentTarget.style.transform = "";
+    //  e.currentTarget.style.zIndex = 'auto';
+
+    // Check if draggedImage and targetImage are valid and have different IDs.
+    if (draggedImage && draggedImage.id === targetImage.id) {
+      // Create a copy of the filteredImages array to avoid mutating state directly.
+      const updatedImages = [...filteredImages];
+
+      // Find the indices of the draggedImage and targetImage in the updatedImages array.
+      const draggedImageIndex = updatedImages.findIndex(
+        (img) => img.id === draggedImage.id
+      );
+      const targetImageIndex = updatedImages.findIndex(
+        (img) => img.id === targetImage.id
+      );
+
+      // Swap the positions of the images in the updatedImages array.
+      if (draggedImageIndex !== -1 && targetImageIndex !== -1) {
+        const temp = updatedImages[draggedImageIndex];
+        updatedImages[draggedImageIndex] = updatedImages[targetImageIndex];
+        updatedImages[targetImageIndex] = temp;
+
+        // Update the state with the new order.
+        setFilteredImages(updatedImages);
+      }
+    }
+
+    // Reset the draggedImage state to indicate that no image is being dragged.
+    setDraggedImage(null);
   };
-
 
   return (
     <section className="Gallery">
@@ -138,11 +168,12 @@ function Gallery() {
               key={image.id}
               draggable="true"
               onDragStart={(e) => onDragStart(e, image)}
-              onDragOver={onDragOver}
+              onDragOver={(e) => onDragOver(e, image)}
               onDrop={(e) => onDrop(e, image)}
               onTouchStart={(e) => onTouchStart(e, image)}
-              onTouchMove={onTouchMove}
-              onTouchEnd={(e) => onTouchEnd(e, index)}
+              onTouchMove={(e) => onTouchMove(e, image)}
+              onTouchEnd={(e) => onTouchEnd(e, image)}
+              data-image-id={image.id}
             >
               <img src={`${image.src}`} alt={`Poster ${image.id}`} />
               <p>{image.tag}</p>
