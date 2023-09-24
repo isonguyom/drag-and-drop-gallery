@@ -9,6 +9,7 @@ function App() {
   const { isAuthenticated, user } = useAuth0();
   return (
     <div className="App">
+    <Gallery />
       {isAuthenticated ? (
         <div>
           <header className="Header">
