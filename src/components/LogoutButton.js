@@ -7,7 +7,7 @@ const LogoutButton = () => {
   return (
     <button
       onClick={() =>
-        logout({ logoutParams: { returnTo: "https://isonguyom.github.io/hngx-stage-three-task/" } })
+        logout({ logoutParams: { returnTo: "https://isonguyom.github.io/drag-and-drop-gallery/" } })
       }
     >
       Log Out
