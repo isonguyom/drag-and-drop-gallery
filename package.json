@@ -2,7 +2,7 @@
   "name": "stage-three-task",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://isonguyom.github.io/hngx-stage-three-task",
+  "homepage": "https://isonguyom.github.io/drag-and-drop-gallery",
   "dependencies": {
     "@auth0/auth0-react": "^2.2.1",
     "@testing-library/jest-dom": "^5.17.0",

@@ -9,7 +9,6 @@ function App() {
   const { isAuthenticated, user } = useAuth0();
   return (
     <div className="App">
-    <Gallery />
       {isAuthenticated ? (
         <div>
           <header className="Header">
@@ -24,8 +23,9 @@ function App() {
         <div>
           <header className="Header">
             <div className="profile-bar">
-              <p className="greetings">Hello, Guest</p>
-              <LoginButton />
+              <p className="greetings">Hello, Guest </p>
+              <LoginButton /> 
+              <p className="greetings2">to use drag and drop</p>
             </div>
           </header>
           <GalleryNotDraggable />
