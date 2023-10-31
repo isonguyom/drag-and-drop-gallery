@@ -1,4 +1,4 @@
-# hngx-stage-three-task
+# drag-and-drop-gallery
 This is a graded task for promotion into HNGX Internship stage four
 
 
@@ -10,12 +10,12 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 Clone Repo:
 ```
-git clone https://github.com/isonguyom/hngx-stage-three-task.git
+git clone https://github.com/isonguyom/drag-and-drop-gallery.git
 ```
 
 Enter the root directory:
 ```
-cd hngx-stage-three-task
+cd drag-and-drop-gallery
 ```
 
 
